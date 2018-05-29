@@ -2,9 +2,21 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
+#include <limits>
 #include <GL/glut.h>
 using namespace cv;
 using namespace std;
+
+//TODO: 28.05. fertig
+//TODO: Berechnungen müssen gemacht werden (Pen and Paper)
+//TODO: Mit den Daten muss OpenGL aktiviert werden, damit man diese in 3D Space legen kann.
+//TODO: Für OpenGL muss Kamera angelegt werden, Texturen möglich sein und auch deren verschiebung (Kamera muss gegebenenfalls nicht verschiebbar sein)
+//TODO: Kontrolschema muss hergestellt werden aus offensichtlichen Gründen.
+//TODO: Tests machen
+//TODO: Kommentare nicht vergessen!
+
+//TODO: 29.05. fertig
+
 
 uchar* thresholding3C(Mat img, int width, int height, uchar R, uchar G, uchar B, bool up) {
 	//TODO: Kommentieren, was hier passiert: Thresholding mit 3 farben (RGB, ohne Alpha) mit nur einem Schwellenwert
@@ -174,18 +186,22 @@ uchar *getViewableSegment(uchar *segment, int width, int height) {
 	return ret;
 }
 
-void getViewableSegment(Mat segment) {
+Mat getViewableSegment(Mat segment) {
 	//Spread the gray levels to humanly distinguishable values
 
 	// - get Material data
-	uchar *data = segment.data;
+	Mat *ret = new Mat(segment.rows, segment.cols, CV_8UC(1));
+	uchar *data = ret->data;
 	int width = segment.cols;
 	int height = segment.rows;
+	for (int i = 0; i < width * height; i++) {
+		data[i] = segment.data[i];
+	}
 
 	// - get max and min of gray levels
-	int min = 255, max = 0;
-	bool goon = true;
+	int min = 256, max = -1;
 	// --- get min
+	bool goon = true;
 	for (int i = 0; i < width * height && goon; i++) {
 		if (data[i] < min) {
 			min = data[i];
@@ -193,6 +209,7 @@ void getViewableSegment(Mat segment) {
 		}
 	}
 	// --- get max
+	goon = true;
 	for (int i = 0; i < width * height && goon; i++) {
 		if (data[i] > max) {
 			max = data[i];
@@ -202,59 +219,79 @@ void getViewableSegment(Mat segment) {
 
 	// - use min and max to setup look-up-table
 	int *lookUpTable = new int[255];
-	for (int i = min; i <= max; i++) {
-		lookUpTable[i] = i - min + ((255) / (max - min));
+	if (max != min) {
+		for (int i = min; i <= max; i++) {
+			lookUpTable[i] = i - min + ((255) / (max - min));
+		}
+	}
+	else {
+		lookUpTable[max] = max;
 	}
 
 	// - use look-up-table to change values
 	for (int i = 0; i < width*height; i++) {
 		data[i] = lookUpTable[data[i]];
 	}
+
+	return *ret;
 }
 
-int main(int argc, char** argv)
-{
+
+void testOpenCV() {
+	//This function tests out OpenCV functionality and the functions for image Segmentation
 	String filename = "data/Logo.png";
+	String windowName1 = "Display window",
+		windowName2 = "THM Logo - Original",
+		windowName3 = "THM Logo - Segment",
+		windowName4 = "THM Logo - Segment with Material",
+		windowName5 = "THM Logo - Segmented (index = 0)",
+		windowName6 = "THM Logo - Segmented (index = 1)",
+		windowName7 = "THM Logo - Segmented (index = 1, optimized)";
+		
 	Mat image;
 	image = imread(filename, IMREAD_UNCHANGED); // Read the file
 	if (image.empty()) // Check for invalid input
 	{
 		cout << "Could not open or find the image" << endl;
-		return -1;
+		return;
 	}
-	//display image
-	namedWindow("Display window", WINDOW_AUTOSIZE); // Create a window for display.
-	imshow("THM Logo - Original", image); // Show our image inside it.
-	//waitKey(0); // Wait for a keystroke in the window
+	// - display image
+	namedWindow(windowName1, WINDOW_AUTOSIZE); // Create a window for display.
+	imshow(windowName2, image); // Show our image inside it.
 
-	//calculate segmentation
+										  
+	// - calculate segmentation
 	uchar* segment = thresholding3C(image, image.cols, image.rows, 200, 255, 200, 0);
 	uchar* showSegment = getViewableSegment(segment, image.cols, image.rows);
 
-	//display segmentation
+	// - display segmentation (bitmap)
 	Mat segmentMat = Mat(image.rows, image.cols, CV_8UC(1), showSegment);
-	imshow("THM Logo - Segment", segmentMat);
-	//waitKey(0);
+	imshow(windowName3, segmentMat);
 
-	//seperate image in segmentation image
-	//here two
+	Mat segmentMat1 = Mat(image.rows, image.cols, CV_8UC(1), segment);
+	Mat showSegmentMat1 = getViewableSegment(segmentMat1);
+	imshow(windowName4, showSegmentMat1);
+
+	// - seperate image in segmentation image
+	// --- here two
+	// --- two steps: - create Array with segmentations
+	//				  - create Material filled with array to show with imshow()
 	uchar* segmentImg1 = getSegmentFromImg3C(image, image.cols, image.rows, segment, 0);
 	uchar* segmentImg2 = getSegmentFromImg3C(image, image.cols, image.rows, segment, 1);
 
-	//display segmentation images
+	// - display segmentated images
 	Mat segmentImg1Mat = Mat(image.rows, image.cols, CV_8UC(3), segmentImg1);
-	imshow("THM Logo - Segmented (index = 0)", segmentImg1Mat);
-	//waitKey(0);
+	imshow(windowName5, segmentImg1Mat);
 
 	Mat segmentImg2Mat = Mat(image.rows, image.cols, CV_8UC(3), segmentImg2);
-	imshow("THM Logo - Segmented (index = 1)", segmentImg2Mat);
-	//waitKey(0);
+	imshow(windowName6, segmentImg2Mat);
 
+	// - display segmentated image 	
+	// --- in one step put into Material
 	Mat segmentImg3Mat = getSegmentMatFromImg3C(image, image.cols, image.rows, segment, 1);
+	imshow(windowName7, segmentImg3Mat);
 
-	imshow("THM Logo - Segmented (index = 1, optimized)", segmentImg3Mat);
-	waitKey(0);
-
+	// - write image (segmentated image) into .png file
 	vector<int> compression_params;
 	compression_params.push_back(IMWRITE_PNG_COMPRESSION);
 	compression_params.push_back(9);
@@ -272,5 +309,66 @@ int main(int argc, char** argv)
 		printf("Saved PNG file with alpha data.\n");
 	else
 		printf("ERROR: Can't save PNG file.\n");
+
+	waitKey();
+	// - delete windows
+	destroyWindow(windowName1);
+	destroyWindow(windowName2);
+	destroyWindow(windowName3);
+	destroyWindow(windowName4);
+	destroyWindow(windowName5);
+	destroyWindow(windowName6);
+	destroyWindow(windowName7);
+}
+
+void drawTest(void *params) {
+	// - some OpenGL
+	glClearColor(1.f, 1.f, 1.f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void testOpenGL() {
+
+	// - create OpenGL-Context (OpenCV can do so)
+	namedWindow("OpenGL window", WINDOW_OPENGL);
+	setOpenGlContext("OpenGL window");
+	setOpenGlDrawCallback("OpenGL window", drawTest);
+	updateWindow("OpenGL window");
+
+	waitKey();
+	destroyWindow("OpenGL window");
+}
+
+
+
+
+int main(int argc, char** argv)
+{
+	char c;
+	bool repeat = true;
+	while (repeat) {
+		cout << "To test OpenCV				enter c" << endl;
+		cout << "To test OpenGL				enter g" << endl;
+		cout << "To get buildInformation	enter i" << endl;
+		cout << "To end the program			enter q" << endl;
+		cin >> c;
+		//emptys std-Input-Buffer in case of longer input, that just one character is read
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+		switch (c) {
+		case 'c':
+			testOpenCV();
+			break;
+		case 'g':
+			testOpenGL();
+			break;
+		case 'i':
+			cout << getBuildInformation() << endl;
+			break;
+		case 'q':
+			repeat = false;
+			break;
+		}
+	}
 	return 0;
 }
