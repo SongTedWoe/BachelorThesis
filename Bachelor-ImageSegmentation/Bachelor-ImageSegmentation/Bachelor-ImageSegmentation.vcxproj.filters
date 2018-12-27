@@ -15,8 +15,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.c">
+    <ClCompile Include="src\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\OpenCV3.4.1\opencv\builds\bin\Debug\opencv_highgui341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_highgui341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_imgcodecs341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_core341d.dll" />
+    <None Include="C:\Program Files (x86)\glew\bin\glew32.dll" />
+    <None Include="src\FragmentShader.glsl" />
+    <None Include="src\TextureMatrixVertexShader.glsl" />
+    <None Include="src\TextureMatrixFragmentShader.glsl" />
+    <None Include="src\TextureFragmentShader.glsl" />
+    <None Include="src\TextureVertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libs\GL\glext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\KHR\khrplatform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\SongmanTheodor\Downloads\glxext.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_core341d.lib" />
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_highgui341d.lib" />
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_imgcodecs341d.lib" />
   </ItemGroup>
 </Project>

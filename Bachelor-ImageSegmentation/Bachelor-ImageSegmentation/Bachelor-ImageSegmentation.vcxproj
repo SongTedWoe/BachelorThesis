@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -70,16 +70,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)libs;$(ProjectDir)data;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)data;$(Path);$(WindowsSDK_LibraryPath_x86);$(WindowsSDK_LibraryPath_x64);$(WindowsSDK_LibraryPath_arm64);$(WindowsSDK_LibraryPath_arm);$(WindowsSDK_LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
-    <OutDir>$(SolutionDir)tmp\</OutDir>
-    <IntDir>tmp\</IntDir>
+    <IncludePath>$(Path);$(ProjectDir)libs;$(ProjectDir)data;$(OPENCV_DIR)install\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)data;$(Path);$(WindowsSDK_LibraryPath_x86);$(WindowsSDK_LibraryPath_x64);$(WindowsSDK_LibraryPath_arm64);$(WindowsSDK_LibraryPath_arm);$(WindowsSDK_LibraryPath);$(VC_LibraryPath_x86);$(OPENCV_DIR)install\x86\vc15\lib</LibraryPath>
+    <OutDir>$(SolutionDir)Bachelor-ImageSegmentation/exc/</OutDir>
+    <IntDir>$(SolutionDir)Bachelor-ImageSegmentation/tmp/</IntDir>
+    <ExecutablePath>$(ProjectDir)libs;$(OPENCV_DIR)install\x86\vc15\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(Path);$(ProjectDir)libs;$(ProjectDir)data;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)data;$(Path);$(WindowsSDK_LibraryPath_x86);$(WindowsSDK_LibraryPath_x64);$(WindowsSDK_LibraryPath_arm64);$(WindowsSDK_LibraryPath_arm);$(WindowsSDK_LibraryPath);$(VC_LibraryPath_x86)</LibraryPath>
-    <OutDir>$(SolutionDir)tmp\</OutDir>
-    <IntDir>tmp\</IntDir>
+    <IncludePath>$(Path);$(ProjectDir)libs;$(ProjectDir)data;$(OPENCV_DIR)install\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)data;$(Path);$(WindowsSDK_LibraryPath_x86);$(WindowsSDK_LibraryPath_x64);$(WindowsSDK_LibraryPath_arm64);$(WindowsSDK_LibraryPath_arm);$(WindowsSDK_LibraryPath);$(VC_LibraryPath_x86);$(OPENCV_DIR)install\x86\vc15\lib</LibraryPath>
+    <OutDir>$(SolutionDir)Bachelor-ImageSegmentation/exc/</OutDir>
+    <IntDir>$(SolutionDir)Bachelor-ImageSegmentation/tmp/</IntDir>
+    <ExecutablePath>$(ProjectDir)libs;$(OPENCV_DIR)install\x86\vc15\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,9 +89,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glut32.lib</AdditionalDependencies>
+      <AdditionalDependencies>shell32.lib;gdi32.lib;user32.lib;glfw3.lib;glut32.lib;opencv_core341d.lib;opencv_imgcodecs341d.lib;opencv_highgui341d.lib;opengl32.lib;glew32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)data</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -109,12 +112,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(ProjectDir)libs;$(ProjectDir)data</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glut32.lib</AdditionalDependencies>
+      <AdditionalDependencies>shell32.lib;gdi32.lib;user32.lib;glfw3.lib;glut32.lib;opencv_core341d.lib;opencv_imgcodecs341d.lib;opencv_highgui341d.lib;opengl32.lib;glew32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,7 +136,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.c" />
+    <ClCompile Include="src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_core341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_highgui341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\bin\opencv_imgcodecs341d.dll" />
+    <None Include="C:\OpenCV3.4.1\opencv\builds\bin\Debug\opencv_highgui341d.dll" />
+    <None Include="C:\Program Files (x86)\glew\bin\glew32.dll" />
+    <None Include="src\FragmentShader.glsl" />
+    <None Include="src\TextureFragmentShader.glsl" />
+    <None Include="src\TextureMatrixFragmentShader.glsl" />
+    <None Include="src\TextureMatrixVertexShader.glsl" />
+    <None Include="src\TextureVertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\SongmanTheodor\Downloads\glxext.h" />
+    <ClInclude Include="libs\GL\glext.h" />
+    <ClInclude Include="libs\KHR\khrplatform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_core341d.lib" />
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_highgui341d.lib" />
+    <Library Include="C:\OpenCV3.4.1\opencvbuild\install\x86\vc15\lib\opencv_imgcodecs341d.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
